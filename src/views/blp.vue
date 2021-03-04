@@ -47,13 +47,13 @@
         </Col>
         <Col :xs="24" :sm="12" :xl="6">
           <div class="card background-blue">
-            <div class="card-value">{{ currentPriceString }}</div>
+            <div class="card-value">{{ tokensRemainingString }}</div>
             <div class="card-title">{{ $t('data.insurTokensRemaining') }}</div>
           </div>
         </Col>
         <Col :xs="24" :sm="12" :xl="6">
           <div class="card background-orange">
-            <div class="card-value">{{ currentPriceString }}</div>
+            <div class="card-value">{{ marketCapString }}</div>
             <div class="card-title">{{ $t('data.marketCap') }}</div>
           </div>
         </Col>
@@ -67,6 +67,9 @@
       </div>
     </div>
     <div class="page-footer">
+      <Row>
+        <Col
+      </Row>
       <div class="copyright">© 2021 InsurAce All Rights Reserved</div>
       <div class="contacts">
         <a target="_blank" href="https://t.me/insurace_protocol">
@@ -90,41 +93,49 @@
 </template>
 
 <script>
+import moment from 'moment';
+import { constants } from 'ethers';
 import { init as initEcharts } from 'echarts';
 import ethersManager from '@/util/EthersManager';
+import FormatUtil from '@/util/FormatUtil';
+
+const option = {
+  xAxis: {
+    type: 'time',
+  },
+  yAxis: {
+    type: 'value',
+  },
+  series: {
+    type: 'line',
+    data: [],
+    showSymbol: false,
+  },
+};
 
 export default {
   name: 'lbp',
   data() {
     return {
       chartInstance: null,
-      chartOption: {
-        xAxis: {
-          type: 'time',
-        },
-        yAxis: {
-          type: 'value',
-        },
-        series: {
-          type: 'line',
-          data: [],
-          showSymbol: false,
-        },
-      },
+      chartOption: option,
+      endTime: moment('20210315', 'YYYYMMDD'),
+      remainingTokens: constants.Zero,
+      currentPrice: constants.Zero,
     };
   },
   computed: {
     remainingTimeString() {
-      return '';
+      return this.endTime.toNow(true);
     },
     currentPriceString() {
-      return '';
+      return FormatUtil.formatUnits(this.currentPrice, 6);
     },
     tokensRemainingString() {
-      return '';
+      return FormatUtil.commify(this.remainingTokens);
     },
     marketCapString() {
-      return '';
+      return FormatUtil.formatUnits(this.currentPrice.mul(1000000), 6);
     },
   },
   mounted() {
@@ -141,7 +152,22 @@ export default {
       this.chartInstance.setOption(this.chartOption);
     },
     queryData() {
-
+      this.queryRemainingTokens();
+      this.queryCurrentPrice();
+    },
+    async queryRemainingTokens() {
+      try {
+        this.remainingTokens = await ethersManager.getBalance('INSUR');
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async queryCurrentPrice() {
+      try {
+        this.currentPrice = await ethersManager.getSpotPrice();
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 }
@@ -209,6 +235,7 @@ export default {
         background-color: #1DB371;
         color: white;
         font-size: 18px;
+        border: none;
         border-radius: 6px;
         padding: 10px 30px 10px 30px;
       }
