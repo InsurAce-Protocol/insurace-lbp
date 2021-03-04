@@ -11,6 +11,9 @@
     },
     "button": {
       "buyToken": "Buy INSUR on Balancer"
+    },
+    "chart": {
+      "title": "Real-time Price"
     }
   }
 }
@@ -58,22 +61,56 @@
       <div class="buy">
         <button>{{ $t('button.buyToken') }}</button>
       </div>
+      <div class="chart-wrapper">
+        <div class="chart-title">{{ $t('chart.title') }}</div>
+        <div id="chart"></div>
+      </div>
     </div>
     <div class="page-footer">
       <div class="copyright">© 2021 InsurAce All Rights Reserved</div>
       <div class="contacts">
-
+        <a target="_blank" href="https://t.me/insurace_protocol">
+          <img src="@/assets/contact/telegram.png" />
+        </a>
+        <a target="_blank" href="https://twitter.com/insur_ace">
+          <img src="@/assets/contact/twitter.png" />
+        </a>
+        <a target="_blank" href="https://discord.gg/vCZMjuH69F">
+          <img src="@/assets/contact/discord.png" />
+        </a>
+        <a target="_blank" href="https://medium.com/insurace">
+          <img src="@/assets/contact/medium.png" />
+        </a>
+        <a href="mailto:contact@insurace.io">
+          <img src="@/assets/contact/email.png" />
+        </a>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { init as initEcharts } from 'echarts';
+import ethersManager from '@/util/EthersManager';
+
 export default {
   name: 'lbp',
   data() {
     return {
-
+      chartInstance: null,
+      chartOption: {
+        xAxis: {
+          type: 'time',
+        },
+        yAxis: {
+          type: 'value',
+        },
+        series: {
+          type: 'line',
+          data: [],
+          showSymbol: false,
+        },
+      },
     };
   },
   computed: {
@@ -88,6 +125,23 @@ export default {
     },
     marketCapString() {
       return '';
+    },
+  },
+  mounted() {
+    this.init();
+  },
+  methods: {
+    init() {
+      this.queryData();
+      this.initChart();
+    },
+    initChart() {
+      this.chartInstance = initEcharts(document.getElementById('chart'));
+
+      this.chartInstance.setOption(this.chartOption);
+    },
+    queryData() {
+
     },
   },
 }
@@ -118,18 +172,18 @@ export default {
       }
     }
     .title {
-      height: 150px;
+      min-height: 200px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       .title-main {
         color: white;
-        font-size: 26px;
+        font-size: 32px;
         font-weight: bold;
       }
       .title-sub {
         color: #1DB371;
-        font-size: 16px;
+        font-size: 20px;
       }
     }
   }
@@ -159,11 +213,35 @@ export default {
         padding: 10px 30px 10px 30px;
       }
     }
+    .chart-wrapper {
+      background-color: #F6F8F9;
+      padding: 20px;
+      margin-top: 20px;
+      .chart-title {
+        font-size: 18px;
+        padding-left: 10px;
+        border-left: 2px solid #1DB371;
+      }
+      #chart {
+        height: 500px;
+      }
+    }
   }
   .page-footer {
-    border-top: 1px solid grey;
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #E5EBF5;
     padding: 10px 0px 10px 0px;
     margin: 0px 50px 0px 50px;
+    .contacts {
+      a {
+        margin-left: 10px;
+        img {
+          width: 30px;
+        }
+      }
+
+    }
   }
 }
 

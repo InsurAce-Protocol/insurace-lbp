@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "echarts": "^5.0.2",
     "ethers": "^5.0.31",
     "moment": "^2.29.1",
     "view-design": "^4.5.0",
