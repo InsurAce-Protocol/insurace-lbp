@@ -1,0 +1,39 @@
+name: Azure Storage Account CI/CD
+
+env:
+  STORAGE_ACCOUNT_NAME: iapsalbp
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build project
+      run: |
+        npm ci
+        npm run build
+
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_STORAGE_ACCOUNT_CREDENTIALS }}
+
+    - name: Upload to blob storage
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.0.72
+        inlineScript: |
+          az storage blob delete-batch --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --source '$web' --pattern '*'
+          az storage blob upload-batch --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --destination '$web' --source ./dist
+
+  # Azure logout
+    - name: logout
+      run: |
+        az logout
