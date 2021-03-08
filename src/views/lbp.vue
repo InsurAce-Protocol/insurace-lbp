@@ -38,13 +38,13 @@
       <Row :gutter="15">
         <Col :xs="24" :sm="12" :xl="6">
           <div class="card-top">
-            <div class="card-value">UTC {{ startTime.format('ha DD/MM/YYYY') }} | 48 {{ $tc('time.hour', 48) }}</div>
+            <div class="card-value">UTC {{ startTime.format('ha DD/MM/YY') }} | 48H</div>
             <div class="card-title">{{ $t('data.startEndTime') }}</div>
           </div>
         </Col>
         <Col :xs="24" :sm="12" :xl="6">
           <div class="card-top">
-            <div class="card-value">INSUR (2 MM) | USDC (1 MM)</div>
+            <div class="card-value">2MM INSUR | 1MM USDC</div>
             <div class="card-title">{{ $t('data.tradingPair') }}</div>
           </div>
         </Col>
@@ -64,7 +64,7 @@
           <div class="card-bottom background-purple">
             <div class="card-value">
               <span v-if="hasStarted">{{ remainingTimeString }}</span>
-              <span v-else>{{ $t('notStarted') }}</span>
+              <span v-else>N.A.</span>
             </div>
             <div class="card-title">{{ $t('data.lbpTimeRemaining') }}</div>
           </div>
@@ -171,7 +171,7 @@ import RestApi from '@/util/RestApi';
 
 const ECHARTS_TIME_FORMAT = 'YYYY/MM/DD HH:mm:ss';
 const NUM_INSUR_TOKENS = 2000000;
-const TIME_START = moment.utc('20210312 14:00:00', 'YYYYMMDD HH:mm:ss');
+const TIME_START = moment.utc('20210315 14:00:00', 'YYYYMMDD HH:mm:ss');
 const TIME_END = TIME_START.clone().add(2, 'day');
 
 const initialOption = {
@@ -382,7 +382,7 @@ export default {
       margin-bottom: 15px;
       .card-value {
         color: #1DB371;
-        font-size: 20px;
+        font-size: 18px;
         font-weight: bold;
       }
       .card-title {
@@ -396,7 +396,7 @@ export default {
       margin-bottom: 15px;
       .card-value {
         color: white;
-        font-size: 20px;
+        font-size: 18px;
         font-weight: bold;
       }
       .card-title {

@@ -52,7 +52,7 @@
       "startEndRatio": "开始/结束比例（$INSUR:$USDC）"
     },
     "guide": {
-      "instruction": "用户手册："
+      "instruction": "活动说明："
     },
     "button": {
       "buyToken": "点击进入 Balancer LBP 购买"
