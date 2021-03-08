@@ -97,15 +97,15 @@
           </div>
         </Col>
       </Row>
+      <div class="buy">
+        <button>{{ $t('button.buyToken') }}</button>
+      </div>
       <div class="guide">
         <div>
           <span>{{ $t('guide.instruction') }}</span>
           <a target="_blank" href="#">English</a>
           <a target="_blank" href="#">中文</a>
         </div>
-      </div>
-      <div class="buy">
-        <button>{{ $t('button.buyToken') }}</button>
       </div>
       <div class="chart">
         <div class="chart-title">{{ $t('chart.title') }}</div>
@@ -400,7 +400,7 @@ export default {
     .guide {
       text-align: center;
       font-size: 20px;
-      margin-bottom: 10px;
+      margin-top: 10px;
       div {
         display: inline-block;
         a {
