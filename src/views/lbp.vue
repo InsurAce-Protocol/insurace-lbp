@@ -38,13 +38,13 @@
       <Row :gutter="15">
         <Col :xs="24" :sm="12" :xl="6">
           <div class="card-top">
-            <div class="card-value">UTC {{ startTime.format('hha DD/MM/YYYY') }} | 48 {{ $tc('time.hour', 48) }}</div>
+            <div class="card-value">UTC {{ startTime.format('ha DD/MM/YYYY') }} | 48 {{ $tc('time.hour', 48) }}</div>
             <div class="card-title">{{ $t('data.startEndTime') }}</div>
           </div>
         </Col>
         <Col :xs="24" :sm="12" :xl="6">
           <div class="card-top">
-            <div class="card-value">INSUR (2,000,000) | USDC (1,000,000)</div>
+            <div class="card-value">INSUR (2 MM) | USDC (1 MM)</div>
             <div class="card-title">{{ $t('data.tradingPair') }}</div>
           </div>
         </Col>
@@ -98,7 +98,7 @@
         </Col>
       </Row>
       <div class="buy">
-        <button>{{ $t('button.buyToken') }}</button>
+        <button @click="handleBuyButton">{{ $t('button.buyToken') }}</button>
       </div>
       <div class="guide">
         <div>
@@ -110,7 +110,7 @@
       <div class="chart">
         <div class="chart-title">{{ $t('chart.title') }}</div>
         <div class="chart-wrapper">
-          <div v-if="!hasStarted" class="chart-empty">{{ $t('notStarted') }}</div>
+          <div v-if="!hasStarted" class="chart-empty">{{ $t('chart.notStarted') }}</div>
           <div id="chart"></div>
         </div>
       </div>
@@ -171,7 +171,7 @@ import RestApi from '@/util/RestApi';
 
 const ECHARTS_TIME_FORMAT = 'YYYY/MM/DD HH:mm:ss';
 const NUM_INSUR_TOKENS = 2000000;
-const TIME_START = moment.utc('20210312 12:00:00', 'YYYYMMDD HH:mm:ss');
+const TIME_START = moment.utc('20210312 14:00:00', 'YYYYMMDD HH:mm:ss');
 const TIME_END = TIME_START.clone().add(2, 'day');
 
 const initialOption = {
@@ -281,6 +281,13 @@ export default {
         });
       } catch (error) {
         console.log(error);
+      }
+    },
+    handleBuyButton() {
+      if (this.currentTime.isSameOrAfter(this.startTime)) {
+        // TODO
+      } else {
+        this.$Message.info(this.$t('notStarted'));
       }
     },
     updateTime() {

@@ -3,7 +3,7 @@
     "title": "InsurAce Token Initial Launch",
     "subtitle": "Supported by Balancer Liquidity Bootstrapping Pool",
     "countdown": "Starts in",
-    "notStarted": "LBP has not started yet",
+    "notStarted": "The LBP event has not started yet",
     "data": {
       "lbpTimeRemaining": "LBP Time Remaining",
       "currentPrice": "INSUR Token Current Price",
@@ -21,12 +21,13 @@
       "buyToken": "Buy $INSUR on Balancer LBP"
     },
     "chart": {
-      "title": "Real-time Price"
+      "title": "Real-time Price",
+      "notStarted": "The LBP event has not started yet. The real-time price will be available once the event starts. Please stay tuned!"
     },
     "notice": {
-      "notTooEarly": "Do not get INSUR too early or you will get rekt.",
-      "watchCost": "Watch your gas fee and slippage.",
-      "noNewPool": "Do not create a new pool on Uniswap or Balancer during the existence of the LBP (watch out for impermanent loss!)",
+      "notTooEarly": "Do not rush to buy or you will get rekt.",
+      "watchCost": "Watch your gas fee and slippage settings.",
+      "noNewPool": "Do not create a new pool on Uniswap or Balancer before the end of the LBP (watch out for impermanent loss!)",
       "correctInsurAddress": "Beware of scams, only use the INSUR address announced by InsurAce official channels."
     },
     "time": {
@@ -39,7 +40,7 @@
     "title": "InsurAce 治理代币（$INSUR）首次发行",
     "subtitle": "由 Balancer Liquidity Bootstrapping Pool (LBP) 提供平台支持",
     "countdown": "倒数",
-    "notStarted": "LBP 尚未开始",
+    "notStarted": "LBP 拍卖尚未开始",
     "data": {
       "lbpTimeRemaining": "LBP 剩余时间",
       "currentPrice": "$INSUR 当前价格",
@@ -57,7 +58,8 @@
       "buyToken": "点击进入 Balancer LBP 购买"
     },
     "chart": {
-      "title": "实时价格"
+      "title": "实时价格",
+      "notStarted": "LBP 拍卖尚未开始。目前无实时数据可供显示。敬请关注！"
     },
     "notice": {
       "notTooEarly": "请勿盲目冲入购买。",
