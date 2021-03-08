@@ -31,7 +31,14 @@
       <div class="title">
         <div class="title-main">{{ $t('title') }}</div>
         <div class="title-sub">{{ $t('subtitle') }}</div>
-        <div v-if="!hasStarted" class="title-countdown">{{ $t('countdown') }} {{ remainingStartTimeString }}</div>
+        <div v-if="!hasStarted" class="title-countdown">
+          <span class="countdown-text">{{ $t('countdown') }}</span>
+          <span class="countdown-time">{{ remainingStartTimeHour }}</span>
+          <span class="countdown-separator"> : </span>
+          <span class="countdown-time">{{ remainingStartTimeMinute }}</span>
+          <span class="countdown-separator"> : </span>
+          <span class="countdown-time">{{ remainingStartTimeSecond }}</span>
+        </div>
       </div>
     </div>
     <div class="page-body">
@@ -170,7 +177,7 @@ import FormatUtil from '@/util/FormatUtil';
 import RestApi from '@/util/RestApi';
 
 const ECHARTS_TIME_FORMAT = 'YYYY/MM/DD HH:mm:ss';
-const NUM_INSUR_TOKENS = 2000000;
+const NUM_INSUR_TOKENS = 100000000;
 const TIME_START = moment.utc('20210315 14:00:00', 'YYYYMMDD HH:mm:ss');
 const TIME_END = TIME_START.clone().add(2, 'day');
 
@@ -195,7 +202,8 @@ export default {
   data() {
     return {
       chartInstance: null,
-      timerId: null,
+      timerIdSecond: null,
+      timerIdMinute: null,
       startTime: TIME_START,
       endTime: TIME_END,
       currentTime: moment(),
@@ -207,8 +215,17 @@ export default {
     hasStarted() {
       return this.currentTime.isSameOrAfter(this.startTime);
     },
-    remainingStartTimeString() {
-      return this.formatRemainingTime(this.startTime);
+    remainingStartTime() {
+      return moment.duration(this.startTime.diff(this.currentTime)).locale(this.$i18n.locale);
+    },
+    remainingStartTimeHour() {
+      return Math.floor(this.remainingStartTime.asHours()).toString().padStart(2, '0');
+    },
+    remainingStartTimeMinute() {
+      return this.remainingStartTime.minutes().toString().padStart(2, '0');
+    },
+    remainingStartTimeSecond() {
+      return this.remainingStartTime.seconds().toString().padStart(2, '0');
     },
     remainingEndTimeString() {
       return this.formatRemainingTime(this.endTime);
@@ -227,24 +244,22 @@ export default {
     this.init();
   },
   beforeDestroy() {
-    window.clearInterval(this.timerId);
+    window.clearInterval(this.timerIdSecond);
+    window.clearInterval(this.timerIdMinute);
   },
   methods: {
     init() {
       this.initChart();
 
-      this.updateData();
+      this.queryData();
 
-      this.timerId = window.setInterval(this.updateData, 60 * 1000);
+      this.timerIdSecond = window.setInterval(this.updateTime, 1000);
+      this.timerIdMinute = window.setInterval(this.queryData, 60 * 1000);
     },
     initChart() {
       this.chartInstance = initEcharts(document.getElementById('chart'));
 
       this.chartInstance.setOption(initialOption);
-    },
-    updateData() {
-      this.updateTime();
-      this.queryData();
     },
     queryData() {
       this.queryRemainingTokens();
@@ -363,8 +378,22 @@ export default {
         font-weight: bold;
       }
       .title-countdown {
-        color: white;
         font-size: 16px;
+        font-weight: bold;
+        margin-top: 20px;
+        .countdown-text {
+          color: white;
+          margin-right: 10px;
+        }
+        .countdown-time {
+          color: #1DB371;
+          padding: 5px 10px 5px 10px;
+          border: 1px solid #1DB371;
+          border-radius: 4px;
+        }
+        .countdown-separator {
+          color: #1DB371;
+        }
       }
     }
   }
