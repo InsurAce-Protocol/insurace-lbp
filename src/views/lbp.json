@@ -1,0 +1,72 @@
+{
+  "en": {
+    "title": "InsurAce Token Initial Launch",
+    "subtitle": "Supported by Balancer Liquidity Bootstrapping Pool",
+    "notStarted": "LBP has not started yet",
+    "data": {
+      "lbpTimeRemaining": "LBP Time Remaining",
+      "currentPrice": "INSUR Token Current Price",
+      "insurTokensRemaining": "INSUR Tokens Remaining In The Pool",
+      "marketCap": "INSUR Token Market Cap",
+      "startEndTime": "Start Time and Duration",
+      "tradingPair": "Trading Pair and Initial Amount",
+      "startingPrice": "INSUR Token Starting Price",
+      "startEndRatio": "Start/End Ratio (INSUR:USDC)"
+    },
+    "guide": {
+      "instruction": "User Guide:"
+    },
+    "button": {
+      "buyToken": "Buy $INSUR on Balancer LBP"
+    },
+    "chart": {
+      "title": "Real-time Price"
+    },
+    "notice": {
+      "notTooEarly": "Do not get INSUR too early or you will get rekt.",
+      "watchCost": "Watch your gas fee and slippage.",
+      "noNewPool": "Do not create a new pool on Uniswap or Balancer during the existence of the LBP (watch out for impermanent loss!)",
+      "correctInsurAddress": "Beware of scams, only use the INSUR address announced by InsurAce official channels."
+    },
+    "time": {
+      "day": "day | days",
+      "hour": "hour | hours",
+      "minute": "minute | minutes"
+    }
+  },
+  "zh": {
+    "title": "InsurAce 治理代币（$INSUR）首次发行",
+    "subtitle": "由 Balancer Liquidity Bootstrapping Pool (LBP) 提供平台支持",
+    "notStarted": "LBP 尚未开始",
+    "data": {
+      "lbpTimeRemaining": "LBP 剩余时间",
+      "currentPrice": "$INSUR 当前价格",
+      "insurTokensRemaining": "剩余 $INSUR 数量",
+      "marketCap": "$INSUR 当前总市值",
+      "startEndTime": "开始时间及时长",
+      "tradingPair": "代币交易对及初始数量",
+      "startingPrice": "$INSUR 起拍价格",
+      "startEndRatio": "开始/结束比例（$INSUR:$USDC）"
+    },
+    "guide": {
+      "instruction": "用户手册："
+    },
+    "button": {
+      "buyToken": "点击进入 Balancer LBP 购买"
+    },
+    "chart": {
+      "title": "实时价格"
+    },
+    "notice": {
+      "notTooEarly": "请勿盲目冲入购买。",
+      "watchCost": "注意您的 Gas 消耗及滑点设置。",
+      "noNewPool": "请勿在 LBP 结束前自行在 Uniswap 等 DEX 上建池。",
+      "correctInsurAddress": "小心防范诈骗，请以 InsurAce 官方公布的 INSUR 代币地址为准。"
+    },
+    "time": {
+      "day": "天",
+      "hour": "小时",
+      "minute": "分钟"
+    }
+  }
+}

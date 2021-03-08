@@ -7,7 +7,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('@/views/blp.vue'),
+    component: () => import('@/views/lbp.vue'),
   },
 ];
 
