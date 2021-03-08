@@ -31,6 +31,7 @@
       <div class="title">
         <div class="title-main">{{ $t('title') }}</div>
         <div class="title-sub">{{ $t('subtitle') }}</div>
+        <div v-if="!hasStarted" class="title-countdown">{{ $t('countdown') }} {{ remainingStartTimeString }}</div>
       </div>
     </div>
     <div class="page-body">
@@ -198,7 +199,6 @@ export default {
       startTime: TIME_START,
       endTime: TIME_END,
       currentTime: moment(),
-      remainingTime: moment.duration(),
       remainingTokens: constants.Zero,
       currentPrice: constants.Zero,
     };
@@ -207,13 +207,11 @@ export default {
     hasStarted() {
       return this.currentTime.isSameOrAfter(this.startTime);
     },
-    remainingTimeString() {
-      const remainingTime = moment.duration(this.endTime.diff(this.currentTime)).locale(this.$i18n.locale);
-      const days = remainingTime.days();
-      const hours = remainingTime.hours();
-      const minutes = remainingTime.minutes();
-
-      return `${days} ${this.$tc('time.day', days)} ${hours} ${this.$tc('time.hour', hours)} ${minutes} ${this.$tc('time.minute', minutes)}`;
+    remainingStartTimeString() {
+      return this.formatRemainingTime(this.startTime);
+    },
+    remainingEndTimeString() {
+      return this.formatRemainingTime(this.endTime);
     },
     currentPriceString() {
       return Number(FormatUtil.formatUnits(this.currentPrice, 6)).toFixed(4);
@@ -288,6 +286,14 @@ export default {
     updateTime() {
       this.currentTime = moment();
     },
+    formatRemainingTime(targetTime) {
+      const remainingTime = moment.duration(targetTime.diff(this.currentTime)).locale(this.$i18n.locale);
+      const days = remainingTime.days();
+      const hours = remainingTime.hours();
+      const minutes = remainingTime.minutes();
+
+      return `${days} ${this.$tc('time.day', days)} ${hours} ${this.$tc('time.hour', hours)} ${minutes} ${this.$tc('time.minute', minutes)}`;
+    },
   },
 }
 </script>
@@ -348,6 +354,10 @@ export default {
         color: #1DB371;
         font-size: 20px;
         font-weight: bold;
+      }
+      .title-countdown {
+        color: white;
+        font-size: 16px;
       }
     }
   }

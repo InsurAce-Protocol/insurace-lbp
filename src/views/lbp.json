@@ -2,6 +2,7 @@
   "en": {
     "title": "InsurAce Token Initial Launch",
     "subtitle": "Supported by Balancer Liquidity Bootstrapping Pool",
+    "countdown": "Starts in",
     "notStarted": "LBP has not started yet",
     "data": {
       "lbpTimeRemaining": "LBP Time Remaining",
@@ -37,6 +38,7 @@
   "zh": {
     "title": "InsurAce 治理代币（$INSUR）首次发行",
     "subtitle": "由 Balancer Liquidity Bootstrapping Pool (LBP) 提供平台支持",
+    "countdown": "倒数",
     "notStarted": "LBP 尚未开始",
     "data": {
       "lbpTimeRemaining": "LBP 剩余时间",
