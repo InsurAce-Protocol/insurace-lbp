@@ -2,6 +2,9 @@ name: Azure Storage Account CI/CD
 
 env:
   STORAGE_ACCOUNT_NAME: iapsalbp
+  CDN_PROFILE_NAME: IAP-SA-LBP-CDN
+  CDN_ENDPOINT: IAP-SA-LBP-CDN
+  RESOURCE_GROUP: InsurAceProduction
 
 on:
   push:
@@ -33,7 +36,14 @@ jobs:
           az storage blob delete-batch --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --source '$web' --pattern '*'
           az storage blob upload-batch --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --destination '$web' --source ./dist
 
-  # Azure logout
+    - name: Purge CDN endpoint
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.0.72
+        inlineScript: |
+          az cdn endpoint purge --content-paths '/*' --profile-name ${{ env.CDN_PROFILE_NAME }} --name ${{ env.CDN_ENDPOINT }} --resource-group ${{ env.RESOURCE_GROUP }}
+
+    # Azure logout
     - name: logout
       run: |
         az logout
