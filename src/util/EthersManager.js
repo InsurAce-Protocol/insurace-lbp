@@ -3,8 +3,8 @@ import config from '@/config';
 import ContractUtil from './ContractUtil';
 
 const Tokens = {
-  INSUR: config.address.tokenIn,
-  USDC: config.address.tokenOut,
+  USDC: config.address.tokenIn,
+  INSUR: config.address.tokenOut,
 };
 
 class EthersManager {

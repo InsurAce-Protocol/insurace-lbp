@@ -2,7 +2,7 @@
   "en": {
     "title": "InsurAce Token Initial Launch",
     "subtitle": "Supported by Balancer Liquidity Bootstrapping Pool",
-    "countdown": "Starts in",
+    "countdown": "Start in",
     "notStarted": "The LBP event has not started yet",
     "data": {
       "lbpTimeRemaining": "LBP Time Remaining",
@@ -18,7 +18,7 @@
       "instruction": "User Guide:"
     },
     "button": {
-      "buyToken": "Buy $INSUR on Balancer LBP"
+      "buyToken": "Get $INSUR on Balancer LBP"
     },
     "chart": {
       "title": "Real-time Price",

@@ -5,10 +5,10 @@
     <div class="page-top">
       <Row>
         <Col :sm="12">
-          <div class="logo">
+          <a class="logo" target="_blank" href="https://insurace.io">
             <img src="@/assets/logo.svg" />
             <span>InsurAce</span>
-          </div>
+          </a>
         </Col>
         <Col :sm="12" :style="{ textAlign: 'right' }">
           <div class="locale">
@@ -70,7 +70,7 @@
         <Col :xs="24" :sm="12" :xl="6">
           <div class="card-bottom background-purple">
             <div class="card-value">
-              <span v-if="hasStarted">{{ remainingTimeString }}</span>
+              <span v-if="hasStarted">{{ remainingEndTimeString }}</span>
               <span v-else>N.A.</span>
             </div>
             <div class="card-title">{{ $t('data.lbpTimeRemaining') }}</div>
@@ -327,7 +327,7 @@ export default {
   flex-direction: column;
   background-color: white;
   .page-top {
-    background-color: #0D031A;
+    background-color: #06062C;
     background-image: url("../assets/background.png");
     background-size: contain;
     background-repeat: no-repeat;

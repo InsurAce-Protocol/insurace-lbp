@@ -41,9 +41,9 @@ jobs:
       with:
         azcliversion: 2.0.72
         inlineScript: |
-          az cdn endpoint purge --content-paths '/*' --profile-name ${{ env.CDN_PROFILE_NAME }} --name ${{ env.CDN_ENDPOINT }} --resource-group ${{ env.RESOURCE_GROUP }}
+          az cdn endpoint purge --content-paths '/*' --profile-name ${{ env.CDN_PROFILE_NAME }} --name ${{ env.CDN_ENDPOINT }} --resource-group ${{ env.RESOURCE_GROUP }} --no-wait
 
     # Azure logout
-    - name: logout
+    - name: Logout
       run: |
         az logout
