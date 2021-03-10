@@ -284,8 +284,8 @@ export default {
       try {
         const result = await RestApi.getPrices();
 
-        const data = result.map(({ time, price }) => {
-          const timeString = moment(time).format('YYYY/MM/DD HH:mm:ss');
+        const data = result.data.data.map(({ time, price }) => {
+          const timeString = moment(time).format(ECHARTS_TIME_FORMAT);
           return [timeString, price];
         });
 

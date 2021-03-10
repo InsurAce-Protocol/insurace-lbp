@@ -7,6 +7,7 @@ const ChainId = {
 };
 
 export default {
+  backendUrl: 'https://data.insurace.io/lbp',
   infuraId: '928677c8717f43f8ba74c4c22da1dde7',
   chainId: ChainId.MAINNET,
   address: {
