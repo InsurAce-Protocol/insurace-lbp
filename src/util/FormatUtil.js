@@ -8,4 +8,8 @@ export default class FormatUtil {
   static commify(bigNumber) {
     return utils.commify(bigNumber);
   }
+
+  static formatCommify(bigNumber, tokenDecimals, numDecimals) {
+    return utils.commify(Number(utils.formatUnits(bigNumber, tokenDecimals)).toFixed(numDecimals));
+  }
 }

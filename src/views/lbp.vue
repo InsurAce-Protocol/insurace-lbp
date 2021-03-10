@@ -57,7 +57,7 @@
         </Col>
         <Col :xs="24" :sm="12" :xl="6">
           <div class="card-top">
-            <div class="card-value">4.5 USD/INSUR</div>
+            <div class="card-value">$4.5 USD/INSUR</div>
             <div class="card-title">{{ $t('data.startingPrice') }}</div>
           </div>
         </Col>
@@ -234,10 +234,10 @@ export default {
       return Number(FormatUtil.formatUnits(this.currentPrice, 6)).toFixed(4);
     },
     tokensRemainingString() {
-      return FormatUtil.commify(this.remainingTokens);
+      return FormatUtil.formatCommify(this.remainingTokens, 18, 0);
     },
     marketCapString() {
-      return FormatUtil.commify(FormatUtil.formatUnits(this.currentPrice.mul(NUM_INSUR_TOKENS), 6));
+      return FormatUtil.formatCommify(this.currentPrice.mul(NUM_INSUR_TOKENS), 18, 0);
     },
   },
   mounted() {
