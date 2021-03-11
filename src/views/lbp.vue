@@ -110,8 +110,8 @@
       <div class="guide">
         <div>
           <span>{{ $t('guide.instruction') }}</span>
-          <a target="_blank" href="#">English</a>
-          <a target="_blank" href="#">中文</a>
+          <a target="_blank" href="https://medium.com/insurace/insurace-initial-token-launch-ea7ac31cc3c1">English</a>
+          <a target="_blank" href="https://forum.insurace.io/t/insurace-balancer-lbp/235">中文</a>
         </div>
       </div>
       <div class="chart">
@@ -300,7 +300,7 @@ export default {
     },
     handleBuyButton() {
       if (this.currentTime.isSameOrAfter(this.startTime)) {
-        // TODO
+        window.open('https://balancer.exchange/#/swap/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/0x544c42fBB96B39B21DF61cf322b5EDC285EE7429', '_blank');
       } else {
         this.$Message.info(this.$t('notStarted'));
       }
