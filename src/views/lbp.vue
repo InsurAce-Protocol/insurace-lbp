@@ -303,11 +303,7 @@ export default {
       }
     },
     handleBuyButton() {
-      if (this.currentTime.isSameOrAfter(this.startTime)) {
-        window.open('https://balancer.exchange/#/swap/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/0x544c42fBB96B39B21DF61cf322b5EDC285EE7429', '_blank');
-      } else {
-        this.$Message.info(this.$t('notStarted'));
-      }
+      window.open('https://balancer.exchange/#/swap/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/0x544c42fBB96B39B21DF61cf322b5EDC285EE7429', '_blank');
     },
     updateTime() {
       this.currentTime = moment();
