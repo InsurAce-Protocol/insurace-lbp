@@ -179,7 +179,7 @@ import RestApi from '@/util/RestApi';
 const ECHARTS_TIME_FORMAT = 'YYYY/MM/DD HH:mm:ss';
 const NUM_INSUR_TOKENS = 100000000;
 const TIME_START = moment.utc('20210315 14:00:00', 'YYYYMMDD HH:mm:ss');
-const TIME_END = TIME_START.clone().add(2, 'day');
+const TIME_END = moment.utc('20210317 14:00:00', 'YYYYMMDD HH:mm:ss');
 
 const initialOption = {
   xAxis: {
@@ -237,7 +237,7 @@ export default {
       return FormatUtil.formatCommify(this.remainingTokens, 18, 0);
     },
     marketCapString() {
-      return FormatUtil.formatCommify(this.currentPrice.mul(NUM_INSUR_TOKENS), 18, 0);
+      return FormatUtil.formatCommify(this.currentPrice.mul(NUM_INSUR_TOKENS), 6, 0);
     },
   },
   mounted() {

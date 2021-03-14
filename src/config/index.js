@@ -8,11 +8,11 @@ const ChainId = {
 
 export default {
   backendUrl: 'https://data.insurace.io/lbp',
-  infuraId: '928677c8717f43f8ba74c4c22da1dde7',
+  infuraId: '3b7ec1647d9349b0be269090f7e77dd8',
   chainId: ChainId.MAINNET,
   address: {
-    tokenIn: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-    tokenOut: '0x20945cA1df56D237fD40036d47E866C7DcCD2114',
-    BPool: '0x9403d141047422Fbf43724FcB985b1e96196c84f',
+    tokenIn: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+    tokenOut: '0x544c42fbb96b39b21df61cf322b5edc285ee7429',
+    BPool: '0x9574e1b5B3e208EdC2315319cA858CE03c1f6A00',
   },
 }
