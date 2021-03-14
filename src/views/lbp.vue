@@ -193,8 +193,12 @@ const initialOption = {
   series: [{
     type: 'line',
     data: [],
-    showSymbol: false,
+    symbolSize: 2,
   }],
+  tooltip: {
+    show: true,
+    trigger: 'item',
+  },
 };
 
 export default {
