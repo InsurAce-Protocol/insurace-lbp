@@ -199,8 +199,8 @@ const DECIMALS_USDC = 6;
 const initialOption = {
   xAxis: {
     type: 'time',
-    min: TIME_START.format(ECHARTS_TIME_FORMAT),
-    max: TIME_END.format(ECHARTS_TIME_FORMAT),
+    min: TIME_START.clone().local().format(ECHARTS_TIME_FORMAT),
+    max: TIME_END.clone().local().format(ECHARTS_TIME_FORMAT),
   },
   yAxis: {
     type: 'value',
@@ -223,8 +223,8 @@ export default {
       chartInstance: null,
       timerIdSecond: null,
       timerIdMinute: null,
-      startTime: TIME_START,
-      endTime: TIME_END,
+      startTime: TIME_START.clone(),
+      endTime: TIME_END.clone(),
       currentTime: moment(),
       remainingTokens: utils.parseUnits('2000000', DECIMALS_INSUR),
       currentPrice: utils.parseUnits('4.5', 6),
@@ -338,7 +338,7 @@ export default {
     async querySwaps() {
       try {
         const query = gql`{
-          swaps (where: {poolAddress: "0x9574e1b5b3e208edc2315319ca858ce03c1f6a00"}, first: 5, skip: 0, orderBy: "timestamp", orderDirection: "desc") {
+          swaps (where: {poolAddress: "0x9574e1b5b3e208edc2315319ca858ce03c1f6a00"}, first: 10, skip: 0, orderBy: "timestamp", orderDirection: "desc") {
             tokenInSym
             tokenAmountIn
             tokenOutSym
@@ -349,8 +349,8 @@ export default {
 
         const result = await graphqlClient.query(query);
 
-        const filterStartTime = TIME_START.subtract(1, 'hour').unix();
-        const filterEndTime = TIME_END.add(1, 'hour').unix();
+        const filterStartTime = TIME_START.clone().subtract(1, 'hour').unix();
+        const filterEndTime = TIME_END.clone().add(1, 'hour').unix();
 
         this.swaps = result.swaps
           .filter((swap) => (filterStartTime <= swap.timestamp && swap.timestamp <= filterEndTime))
