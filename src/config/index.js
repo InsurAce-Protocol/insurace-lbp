@@ -8,7 +8,8 @@ const ChainId = {
 
 export default {
   backendUrl: 'https://data.insurace.io/lbp',
-  infuraId: '3b7ec1647d9349b0be269090f7e77dd8',
+  graphqlUrl: 'https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-beta',
+  infuraId: '30c409ea8641450193cab31a3245abea',
   chainId: ChainId.MAINNET,
   address: {
     tokenIn: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',

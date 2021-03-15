@@ -24,6 +24,12 @@
       "title": "Real-time Price",
       "notStarted": "The LBP event has not started yet. The real-time price will be available once the event starts. Please stay tuned!"
     },
+    "table": {
+      "noData": "No Data",
+      "time": "Time",
+      "in": "Trade In",
+      "out": "Trade Out"
+    },
     "notice": {
       "notTooEarly": "Do not rush to buy or you will get rekt.",
       "watchCost": "Watch your gas fee and slippage settings.",
@@ -60,6 +66,12 @@
     "chart": {
       "title": "实时价格",
       "notStarted": "LBP 拍卖尚未开始。目前无实时数据可供显示。敬请关注！"
+    },
+    "table": {
+      "noData": "暂无数据",
+      "time": "时间",
+      "in": "买进",
+      "out": "卖出"
     },
     "notice": {
       "notTooEarly": "请勿盲目冲入购买。",

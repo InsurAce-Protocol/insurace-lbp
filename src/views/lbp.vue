@@ -114,13 +114,24 @@
           <a target="_blank" href="https://forum.insurace.io/t/insurace-balancer-lbp/235">中文</a>
         </div>
       </div>
-      <div class="chart">
-        <div class="chart-title">{{ $t('chart.title') }}</div>
-        <div class="chart-wrapper">
-          <div v-if="!hasStarted" class="chart-empty">{{ $t('chart.notStarted') }}</div>
-          <div id="chart"></div>
-        </div>
-      </div>
+      <Row :gutter="10">
+        <Col :xs="24" :lg="18" :style="{ marginTop: '20px' }">
+          <div class="chart">
+            <div class="chart-title">{{ $t('chart.title') }}</div>
+            <div class="chart-wrapper">
+              <div v-if="!hasStarted" class="chart-empty">{{ $t('chart.notStarted') }}</div>
+              <div id="chart"></div>
+            </div>
+          </div>
+        </Col>
+        <Col :xs="24" :lg="6" :style="{ marginTop: '20px' }">
+          <Table
+            :columns="columns"
+            :data="swaps"
+            :no-data-text="$t('table.noData')"
+          />
+        </Col>
+      </Row>
       <div class="notice">
         <div class="notice-icon">
           <Icon type="ios-warning-outline" />
@@ -170,16 +181,20 @@
 
 <script>
 import moment from 'moment';
-import { constants } from 'ethers';
+import { gql } from 'graphql-request';
+import { utils } from 'ethers';
 import { init as initEcharts } from 'echarts';
 import ethersManager from '@/util/EthersManager';
 import FormatUtil from '@/util/FormatUtil';
+import graphqlClient from '@/util/GraphqlClient';
 import RestApi from '@/util/RestApi';
 
 const ECHARTS_TIME_FORMAT = 'YYYY/MM/DD HH:mm:ss';
 const NUM_INSUR_TOKENS = 100000000;
 const TIME_START = moment.utc('20210315 14:00:00', 'YYYYMMDD HH:mm:ss');
 const TIME_END = moment.utc('20210317 14:00:00', 'YYYYMMDD HH:mm:ss');
+const DECIMALS_INSUR = 18;
+const DECIMALS_USDC = 6;
 
 const initialOption = {
   xAxis: {
@@ -211,11 +226,24 @@ export default {
       startTime: TIME_START,
       endTime: TIME_END,
       currentTime: moment(),
-      remainingTokens: constants.Zero,
-      currentPrice: constants.Zero,
+      remainingTokens: utils.parseUnits('2000000', DECIMALS_INSUR),
+      currentPrice: utils.parseUnits('4.5', 6),
+      swaps: [],
     };
   },
   computed: {
+    columns() {
+      return [{
+        title: this.$t('table.time'),
+        key: 'time',
+      }, {
+        title: this.$t('table.in'),
+        key: 'in',
+      }, {
+        title: this.$t('table.out'),
+        key: 'out',
+      }];
+    },
     hasStarted() {
       return this.currentTime.isSameOrAfter(this.startTime);
     },
@@ -235,13 +263,13 @@ export default {
       return this.formatRemainingTime(this.endTime);
     },
     currentPriceString() {
-      return Number(FormatUtil.formatUnits(this.currentPrice, 6)).toFixed(4);
+      return Number(FormatUtil.formatUnits(this.currentPrice, DECIMALS_USDC)).toFixed(4);
     },
     tokensRemainingString() {
-      return FormatUtil.formatCommify(this.remainingTokens, 18, 0);
+      return FormatUtil.formatCommify(this.remainingTokens, DECIMALS_INSUR, 0);
     },
     marketCapString() {
-      return FormatUtil.formatCommify(this.currentPrice.mul(NUM_INSUR_TOKENS), 6, 0);
+      return FormatUtil.formatCommify(this.currentPrice.mul(NUM_INSUR_TOKENS), DECIMALS_USDC, 0);
     },
   },
   mounted() {
@@ -266,9 +294,14 @@ export default {
       this.chartInstance.setOption(initialOption);
     },
     queryData() {
+      if (!this.hasStarted) {
+        return;
+      }
+
       this.queryRemainingTokens();
       this.queryCurrentPrice();
       this.queryChartData();
+      this.querySwaps();
     },
     async queryRemainingTokens() {
       try {
@@ -298,6 +331,29 @@ export default {
             data,
           }],
         });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async querySwaps() {
+      try {
+        const query = gql`{
+          swaps (where: {poolAddress: "0x9574e1b5b3e208edc2315319ca858ce03c1f6a00"}, first: 5, skip: 0, orderBy: "timestamp", orderDirection: "desc") {
+            tokenInSym
+            tokenAmountIn
+            tokenOutSym
+            tokenAmountOut
+            timestamp
+          }
+        }`;
+
+        const result = await graphqlClient.query(query);
+
+        this.swaps = result.swaps.map((swap) => ({
+          time: moment.unix(swap.timestamp).format('HH:mm:ss'),
+          in: `${Number(swap.tokenAmountIn).toFixed(0)} ${swap.tokenInSym}`,
+          out: `${Number(swap.tokenAmountOut).toFixed(0)} ${swap.tokenOutSym}`,
+        }));
       } catch (error) {
         console.log(error);
       }
@@ -461,7 +517,6 @@ export default {
     .chart {
       background-color: #F6F8F9;
       padding: 20px;
-      margin-top: 20px;
       .chart-title {
         font-size: 18px;
         padding-left: 10px;
