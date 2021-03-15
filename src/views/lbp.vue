@@ -286,7 +286,7 @@ export default {
       this.queryData();
 
       this.timerIdSecond = window.setInterval(this.updateTime, 1000);
-      this.timerIdMinute = window.setInterval(this.queryData, 60 * 1000);
+      this.timerIdMinute = window.setInterval(this.queryData, 3 * 60 * 1000);
     },
     initChart() {
       this.chartInstance = initEcharts(document.getElementById('chart'));
