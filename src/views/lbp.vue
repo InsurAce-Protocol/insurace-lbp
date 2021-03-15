@@ -349,8 +349,11 @@ export default {
 
         const result = await graphqlClient.query(query);
 
+        const filterStartTime = TIME_START.subtract(1, 'hour').unix();
+        const filterEndTime = TIME_END.add(1, 'hour').unix();
+
         this.swaps = result.swaps
-          .filter((swap) => TIME_START.unix() <= swap.timestamp && swap.timestamp <= TIME_END.unix())
+          .filter((swap) => (filterStartTime <= swap.timestamp && swap.timestamp <= filterEndTime))
           .map((swap) => ({
             time: moment.unix(swap.timestamp).format('HH:mm:ss'),
             in: `${Number(swap.tokenAmountIn).toFixed(0)} ${swap.tokenInSym}`,
