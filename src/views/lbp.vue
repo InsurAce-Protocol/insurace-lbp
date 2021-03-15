@@ -349,11 +349,13 @@ export default {
 
         const result = await graphqlClient.query(query);
 
-        this.swaps = result.swaps.map((swap) => ({
-          time: moment.unix(swap.timestamp).format('HH:mm:ss'),
-          in: `${Number(swap.tokenAmountIn).toFixed(0)} ${swap.tokenInSym}`,
-          out: `${Number(swap.tokenAmountOut).toFixed(0)} ${swap.tokenOutSym}`,
-        }));
+        this.swaps = result.swaps
+          .filter((swap) => TIME_START.unix() <= swap.timestamp && swap.timestamp <= TIME_END.unix())
+          .map((swap) => ({
+            time: moment.unix(swap.timestamp).format('HH:mm:ss'),
+            in: `${Number(swap.tokenAmountIn).toFixed(0)} ${swap.tokenInSym}`,
+            out: `${Number(swap.tokenAmountOut).toFixed(0)} ${swap.tokenOutSym}`,
+          }));
       } catch (error) {
         console.log(error);
       }
