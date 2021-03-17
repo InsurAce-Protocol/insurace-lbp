@@ -33,7 +33,6 @@ jobs:
       with:
         azcliversion: 2.0.72
         inlineScript: |
-          az storage blob delete-batch --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --source '$web' --pattern '*'
           az storage blob upload-batch --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --destination '$web' --source ./dist
 
     - name: Purge CDN endpoint
