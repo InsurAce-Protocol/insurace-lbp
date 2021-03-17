@@ -4,6 +4,7 @@
     "subtitle": "Supported by Balancer Liquidity Bootstrapping Pool",
     "countdown": "Start in",
     "notStarted": "The LBP event has not started yet",
+    "hasEnded": "The LBP event has ended",
     "data": {
       "lbpTimeRemaining": "LBP Time Remaining",
       "currentPrice": "INSUR Token Current Price",
@@ -22,7 +23,8 @@
     },
     "chart": {
       "title": "Real-time Price",
-      "notStarted": "The LBP event has not started yet. The real-time price will be available once the event starts. Please stay tuned!"
+      "notStarted": "The LBP event has not started yet. The real-time price will be available once the event starts. Please stay tuned!",
+      "estimatedFinalPrice": "Estimated final price without buy or sell orders"
     },
     "table": {
       "noData": "No Data",
@@ -47,6 +49,7 @@
     "subtitle": "由 Balancer Liquidity Bootstrapping Pool (LBP) 提供平台支持",
     "countdown": "倒数",
     "notStarted": "LBP 拍卖尚未开始",
+    "hasEnded": "LBP 拍卖已经结束",
     "data": {
       "lbpTimeRemaining": "LBP 剩余时间",
       "currentPrice": "$INSUR 当前价格",
@@ -65,7 +68,8 @@
     },
     "chart": {
       "title": "实时价格",
-      "notStarted": "LBP 拍卖尚未开始。目前无实时数据可供显示。敬请关注！"
+      "notStarted": "LBP 拍卖尚未开始。目前无实时数据可供显示。敬请关注！",
+      "estimatedFinalPrice": "无买单卖单的预估最终价"
     },
     "table": {
       "noData": "暂无数据",

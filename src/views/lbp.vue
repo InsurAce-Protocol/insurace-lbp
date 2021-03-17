@@ -105,7 +105,7 @@
         </Col>
       </Row>
       <div class="buy">
-        <button @click="handleBuyButton">{{ $t('button.buyToken') }}</button>
+        <button @click="handleBuyButton" :disabled="isButtonDisabled" >{{ buttonText }}</button>
       </div>
       <div class="guide">
         <div>
@@ -209,10 +209,25 @@ const initialOption = {
     type: 'line',
     data: [],
     symbolSize: 2,
+    markLine: {
+      data: [],
+      animation: false,
+      lineStyle: {
+        type: 'dashed',
+        color: '#90CC75',
+      },
+    },
   }],
   tooltip: {
     show: true,
     trigger: 'item',
+    formatter: function({ name, value }) {
+      if (Array.isArray(value)) {
+        return `<strong>${value[1].toFixed(4)}</strong>`;
+      }
+
+      return `${name} <strong>${value}</strong>`;
+    },
   },
 };
 
@@ -226,12 +241,17 @@ export default {
       startTime: TIME_START.clone(),
       endTime: TIME_END.clone(),
       currentTime: moment(),
-      remainingTokens: utils.parseUnits('2000000', DECIMALS_INSUR),
+      remainingInsur: utils.parseUnits('2000000', DECIMALS_INSUR),
+      remainingUsdc: utils.parseUnits('1000000', DECIMALS_USDC),
       currentPrice: utils.parseUnits('4.5', 6),
       swaps: [],
+      estimatedFinalPrice: 0,
     };
   },
   computed: {
+    locale() {
+      return this.$root.$i18n.locale;
+    },
     columns() {
       return [{
         title: this.$t('table.time'),
@@ -246,6 +266,9 @@ export default {
     },
     hasStarted() {
       return this.currentTime.isSameOrAfter(this.startTime);
+    },
+    hasEnded() {
+      return this.currentTime.isSameOrAfter(this.endTime);
     },
     remainingStartTime() {
       return moment.duration(this.startTime.diff(this.currentTime)).locale(this.$i18n.locale);
@@ -266,10 +289,20 @@ export default {
       return Number(FormatUtil.formatUnits(this.currentPrice, DECIMALS_USDC)).toFixed(4);
     },
     tokensRemainingString() {
-      return FormatUtil.formatCommify(this.remainingTokens, DECIMALS_INSUR, 0);
+      return FormatUtil.formatCommify(this.remainingInsur, DECIMALS_INSUR, 0);
     },
     marketCapString() {
       return FormatUtil.formatCommify(this.currentPrice.mul(NUM_INSUR_TOKENS), DECIMALS_USDC, 0);
+    },
+    buttonText() {
+      if (this.hasEnded) {
+        return this.$t('hasEnded');
+      }
+
+      return this.$t('button.buyToken');
+    },
+    isButtonDisabled() {
+      return this.hasEnded;
     },
   },
   mounted() {
@@ -279,14 +312,34 @@ export default {
     window.clearInterval(this.timerIdSecond);
     window.clearInterval(this.timerIdMinute);
   },
+  watch: {
+    locale: function() {
+      this.updateChartMarkLine();
+    },
+    estimatedFinalPrice: function() {
+      this.updateChartMarkLine();
+    },
+  },
   methods: {
+    updateChartMarkLine() {
+      this.chartInstance.setOption({
+        series: [{
+          markLine: {
+            data: [{
+              name: this.$t('chart.estimatedFinalPrice'),
+              yAxis: this.estimatedFinalPrice.toFixed(4),
+            }],
+          },
+        }],
+      });
+    },
     init() {
       this.initChart();
 
       this.queryData();
 
       this.timerIdSecond = window.setInterval(this.updateTime, 1000);
-      this.timerIdMinute = window.setInterval(this.queryData, 3 * 60 * 1000);
+      this.timerIdMinute = window.setInterval(this.queryDataIfNotEnded, 3 * 60 * 1000);
     },
     initChart() {
       this.chartInstance = initEcharts(document.getElementById('chart'));
@@ -303,9 +356,19 @@ export default {
       this.queryChartData();
       this.querySwaps();
     },
+    queryDataIfNotEnded() {
+      if (!this.hasEnded) {
+        this.queryData();
+      }
+    },
     async queryRemainingTokens() {
       try {
-        this.remainingTokens = await ethersManager.getBalance('INSUR');
+        [this.remainingInsur, this.remainingUsdc] = await Promise.all([
+          ethersManager.getBalance('INSUR'),
+          ethersManager.getBalance('USDC'),
+        ]);
+
+        this.estimatedFinalPrice = Number(utils.formatUnits(this.remainingUsdc, DECIMALS_USDC)) / Number(utils.formatUnits(this.remainingInsur, DECIMALS_INSUR));
       } catch (error) {
         console.log(error);
       }
@@ -517,6 +580,11 @@ export default {
         padding: 20px 40px 20px 40px;
         cursor: pointer;
         text-decoration: underline;
+        &:disabled {
+          background-color: #CCCCCC;
+          color: #999999;
+          text-decoration: none;
+        }
       }
     }
     .chart {
