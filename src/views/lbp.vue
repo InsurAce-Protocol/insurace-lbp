@@ -184,17 +184,22 @@ import moment from 'moment';
 import { gql } from 'graphql-request';
 import { utils } from 'ethers';
 import { init as initEcharts } from 'echarts';
+import config from '@/config';
 import ethersManager from '@/util/EthersManager';
 import FormatUtil from '@/util/FormatUtil';
 import graphqlClient from '@/util/GraphqlClient';
 import RestApi from '@/util/RestApi';
+import ChartData from '@/data/ChartData.json';
 
 const ECHARTS_TIME_FORMAT = 'YYYY/MM/DD HH:mm:ss';
-const NUM_INSUR_TOKENS = 100000000;
+const TOTAL_TOKEN_OUT = 100000000;
 const TIME_START = moment.utc('20210315 14:00:00', 'YYYYMMDD HH:mm:ss');
 const TIME_END = moment.utc('20210317 14:00:00', 'YYYYMMDD HH:mm:ss');
-const DECIMALS_INSUR = 18;
-const DECIMALS_USDC = 6;
+const INITIAL_TOKEN_IN = 1000000;
+const INITIAL_TOKEN_OUT = 2000000;
+const DECIMALS_TOKEN_IN = 6;
+const DECIMALS_TOKEN_OUT = 18;
+const BALANCER_URL = 'https://balancer.exchange/#/swap/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/0x544c42fBB96B39B21DF61cf322b5EDC285EE7429';
 
 const initialOption = {
   xAxis: {
@@ -241,8 +246,8 @@ export default {
       startTime: TIME_START.clone(),
       endTime: TIME_END.clone(),
       currentTime: moment(),
-      remainingInsur: utils.parseUnits('2000000', DECIMALS_INSUR),
-      remainingUsdc: utils.parseUnits('1000000', DECIMALS_USDC),
+      remainingTokenIn: utils.parseUnits(INITIAL_TOKEN_IN.toString(), DECIMALS_TOKEN_IN),
+      remainingTokenOut: utils.parseUnits(INITIAL_TOKEN_OUT.toString(), DECIMALS_TOKEN_OUT),
       currentPrice: utils.parseUnits('4.5', 6),
       swaps: [],
       estimatedFinalPrice: 0,
@@ -286,13 +291,13 @@ export default {
       return this.formatRemainingTime(this.endTime);
     },
     currentPriceString() {
-      return Number(FormatUtil.formatUnits(this.currentPrice, DECIMALS_USDC)).toFixed(4);
+      return Number(FormatUtil.formatUnits(this.currentPrice, DECIMALS_TOKEN_IN)).toFixed(4);
     },
     tokensRemainingString() {
-      return FormatUtil.formatCommify(this.remainingInsur, DECIMALS_INSUR, 0);
+      return FormatUtil.formatCommify(this.remainingTokenOut, DECIMALS_TOKEN_OUT, 0);
     },
     marketCapString() {
-      return FormatUtil.formatCommify(this.currentPrice.mul(NUM_INSUR_TOKENS), DECIMALS_USDC, 0);
+      return FormatUtil.formatCommify(this.currentPrice.mul(TOTAL_TOKEN_OUT), DECIMALS_TOKEN_IN, 0);
     },
     buttonText() {
       if (this.hasEnded) {
@@ -353,8 +358,13 @@ export default {
 
       this.queryRemainingTokens();
       this.queryCurrentPrice();
-      this.queryChartData();
       this.querySwaps();
+
+      if (this.hasEnded) {
+        this.queryStaticChartData();
+      } else {
+        this.queryChartData();
+      }
     },
     queryDataIfNotEnded() {
       if (!this.hasEnded) {
@@ -363,12 +373,12 @@ export default {
     },
     async queryRemainingTokens() {
       try {
-        [this.remainingInsur, this.remainingUsdc] = await Promise.all([
+        [this.remainingTokenOut, this.remainingTokenIn] = await Promise.all([
           ethersManager.getBalance('INSUR'),
           ethersManager.getBalance('USDC'),
         ]);
 
-        this.estimatedFinalPrice = Number(utils.formatUnits(this.remainingUsdc, DECIMALS_USDC)) / Number(utils.formatUnits(this.remainingInsur, DECIMALS_INSUR));
+        this.estimatedFinalPrice = this.calcEstimatedFinalPrice(this.remainingTokenIn, this.remainingTokenOut);
       } catch (error) {
         console.log(error);
       }
@@ -401,7 +411,7 @@ export default {
     async querySwaps() {
       try {
         const query = gql`{
-          swaps (where: {poolAddress: "0x9574e1b5b3e208edc2315319ca858ce03c1f6a00"}, first: 10, skip: 0, orderBy: "timestamp", orderDirection: "desc") {
+          swaps (where: {poolAddress: "${config.address.BPool.toLowerCase()}"}, first: 10, skip: 0, orderBy: "timestamp", orderDirection: "desc") {
             tokenInSym
             tokenAmountIn
             tokenOutSym
@@ -426,17 +436,32 @@ export default {
         console.log(error);
       }
     },
+    queryStaticChartData() {
+      const data = ChartData.data.map(({ time, price }) => {
+        const timeString = moment(time).format(ECHARTS_TIME_FORMAT);
+        return [timeString, price];
+      });
+
+      this.chartInstance.setOption({
+        series: [{
+          data,
+        }],
+      });
+    },
     handleBuyButton() {
-      window.open('https://balancer.exchange/#/swap/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/0x544c42fBB96B39B21DF61cf322b5EDC285EE7429', '_blank');
+      window.open(BALANCER_URL, '_blank');
     },
     updateTime() {
       this.currentTime = moment();
     },
+    calcEstimatedFinalPrice(remainingTokenIn, remainingTokenOut) {
+      return Number(utils.formatUnits(remainingTokenIn, DECIMALS_TOKEN_IN)) / Number(utils.formatUnits(remainingTokenOut, DECIMALS_TOKEN_OUT))
+    },
     formatRemainingTime(targetTime) {
       const remainingTime = moment.duration(targetTime.diff(this.currentTime)).locale(this.$i18n.locale);
-      const days = remainingTime.days();
-      const hours = remainingTime.hours();
-      const minutes = remainingTime.minutes();
+      const days = Math.max(remainingTime.days(), 0);
+      const hours = Math.max(remainingTime.hours(), 0);
+      const minutes = Math.max(remainingTime.minutes(), 0);
 
       return `${days} ${this.$tc('time.day', days)} ${hours} ${this.$tc('time.hour', hours)} ${minutes} ${this.$tc('time.minute', minutes)}`;
     },
