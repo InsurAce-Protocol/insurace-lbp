@@ -1,6 +1,10 @@
 import { utils } from 'ethers';
 
 export default class FormatUtil {
+  static parseUnits(bigNumberish, numDecimals) {
+    return utils.parseUnits(bigNumberish.toString(), numDecimals);
+  }
+
   static formatUnits(bigNumber, numDecimals) {
     return utils.formatUnits(bigNumber, numDecimals);
   }

@@ -182,7 +182,6 @@
 <script>
 import moment from 'moment';
 import { gql } from 'graphql-request';
-import { utils } from 'ethers';
 import { init as initEcharts } from 'echarts';
 import config from '@/config';
 import ethersManager from '@/util/EthersManager';
@@ -195,11 +194,17 @@ const ECHARTS_TIME_FORMAT = 'YYYY/MM/DD HH:mm:ss';
 const TOTAL_TOKEN_OUT = 100000000;
 const TIME_START = moment.utc('20210315 14:00:00', 'YYYYMMDD HH:mm:ss');
 const TIME_END = moment.utc('20210317 14:00:00', 'YYYYMMDD HH:mm:ss');
-const INITIAL_TOKEN_IN = 1000000;
-const INITIAL_TOKEN_OUT = 2000000;
 const DECIMALS_TOKEN_IN = 6;
 const DECIMALS_TOKEN_OUT = 18;
 const BALANCER_URL = 'https://balancer.exchange/#/swap/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/0x544c42fBB96B39B21DF61cf322b5EDC285EE7429';
+
+const INITIAL_TOKEN_IN = 1000000;
+const INITIAL_TOKEN_OUT = 2000000;
+const INITIAL_PRICE = 4.5;
+
+const FINAL_TOKEN_IN = 6.023334;
+const FINAL_TOKEN_OUT = 1.046172558455603138;
+const FINAL_PRICE = 5.777721;
 
 const initialOption = {
   xAxis: {
@@ -246,9 +251,9 @@ export default {
       startTime: TIME_START.clone(),
       endTime: TIME_END.clone(),
       currentTime: moment(),
-      remainingTokenIn: utils.parseUnits(INITIAL_TOKEN_IN.toString(), DECIMALS_TOKEN_IN),
-      remainingTokenOut: utils.parseUnits(INITIAL_TOKEN_OUT.toString(), DECIMALS_TOKEN_OUT),
-      currentPrice: utils.parseUnits('4.5', 6),
+      remainingTokenIn: FormatUtil.parseUnits(INITIAL_TOKEN_IN, DECIMALS_TOKEN_IN),
+      remainingTokenOut: FormatUtil.parseUnits(INITIAL_TOKEN_OUT, DECIMALS_TOKEN_OUT),
+      currentPrice: FormatUtil.parseUnits(INITIAL_PRICE, DECIMALS_TOKEN_OUT),
       swaps: [],
       estimatedFinalPrice: 0,
     };
@@ -356,13 +361,15 @@ export default {
         return;
       }
 
-      this.queryRemainingTokens();
-      this.queryCurrentPrice();
       this.querySwaps();
 
       if (this.hasEnded) {
+        this.queryStaticRemainingTokens();
+        this.queryStaticCurrentPrice();
         this.queryStaticChartData();
       } else {
+        this.queryRemainingTokens();
+        this.queryCurrentPrice();
         this.queryChartData();
       }
     },
@@ -436,6 +443,15 @@ export default {
         console.log(error);
       }
     },
+    queryStaticRemainingTokens() {
+      this.remainingTokenIn = FormatUtil.parseUnits(FINAL_TOKEN_IN, DECIMALS_TOKEN_IN);
+      this.remainingTokenOut = FormatUtil.parseUnits(FINAL_TOKEN_OUT, DECIMALS_TOKEN_OUT);
+
+      this.estimatedFinalPrice = this.calcEstimatedFinalPrice(this.remainingTokenIn, this.remainingTokenOut);
+    },
+    queryStaticCurrentPrice() {
+      this.currentPrice = FormatUtil.parseUnits(FINAL_PRICE, DECIMALS_TOKEN_IN);
+    },
     queryStaticChartData() {
       const data = ChartData.data.map(({ time, price }) => {
         const timeString = moment(time).format(ECHARTS_TIME_FORMAT);
@@ -455,7 +471,7 @@ export default {
       this.currentTime = moment();
     },
     calcEstimatedFinalPrice(remainingTokenIn, remainingTokenOut) {
-      return Number(utils.formatUnits(remainingTokenIn, DECIMALS_TOKEN_IN)) / Number(utils.formatUnits(remainingTokenOut, DECIMALS_TOKEN_OUT))
+      return Number(FormatUtil.formatUnits(remainingTokenIn, DECIMALS_TOKEN_IN)) / Number(FormatUtil.formatUnits(remainingTokenOut, DECIMALS_TOKEN_OUT))
     },
     formatRemainingTime(targetTime) {
       const remainingTime = moment.duration(targetTime.diff(this.currentTime)).locale(this.$i18n.locale);
