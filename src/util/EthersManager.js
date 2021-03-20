@@ -2,11 +2,6 @@ import { providers } from 'ethers';
 import config from '@/config';
 import ContractUtil from './ContractUtil';
 
-const Tokens = {
-  USDC: config.address.tokenIn,
-  INSUR: config.address.tokenOut,
-};
-
 class EthersManager {
   constructor() {
     this.provider = new providers.InfuraProvider(config.chainId, config.infuraId);
@@ -17,8 +12,12 @@ class EthersManager {
     return this.contracts.BPool.getSpotPrice(config.address.tokenIn, config.address.tokenOut);
   }
 
-  getBalance(tokenSymbol) {
-    return this.contracts.BPool.getBalance(Tokens[tokenSymbol]);
+  getTokenInBalance() {
+    return this.contracts.BPool.getBalance(config.address.tokenIn);
+  }
+
+  getTokenOutBalance() {
+    return this.contracts.BPool.getBalance(config.address.tokenOut);
   }
 }
 

@@ -9,7 +9,7 @@ const ChainId = {
 export default {
   backendUrl: 'https://data.insurace.io/lbp',
   graphqlUrl: 'https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-beta',
-  infuraId: '30c409ea8641450193cab31a3245abea',
+  infuraId: process.env.VUE_APP_INFURA_ID,
   chainId: ChainId.MAINNET,
   address: {
     tokenIn: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
@@ -18,7 +18,7 @@ export default {
   },
   azure: {
     insights: {
-      connectionString: 'InstrumentationKey=f091e9a5-1771-4124-9045-803ada9b042d;IngestionEndpoint=https://westus2-1.in.applicationinsights.azure.com/',
+      connectionString: process.env.VUE_APP_AZURE_CONNECTION_STRING,
     },
   },
 }

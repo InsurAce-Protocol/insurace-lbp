@@ -380,9 +380,9 @@ export default {
     },
     async queryRemainingTokens() {
       try {
-        [this.remainingTokenOut, this.remainingTokenIn] = await Promise.all([
-          ethersManager.getBalance('INSUR'),
-          ethersManager.getBalance('USDC'),
+        [this.remainingTokenIn, this.remainingTokenOut] = await Promise.all([
+          ethersManager.getTokenInBalance(),
+          ethersManager.getTokenOutBalance(),
         ]);
 
         this.estimatedFinalPrice = this.calcEstimatedFinalPrice(this.remainingTokenIn, this.remainingTokenOut);
